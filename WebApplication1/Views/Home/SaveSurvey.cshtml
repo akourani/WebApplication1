@@ -1,0 +1,126 @@
+﻿@{
+    ViewBag.Title = "Survey Form";
+}
+<h2>@ViewBag.Title.</h2>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.js"></script>
+<script>
+   $(document).ready(function () {
+       // $("#btnSave").click(function () {
+
+            
+    $("#myform").submit(function (e) {
+        console.log("Inside");
+        e.preventDefault();
+        var $form = $(this);
+        /*
+        if (!$form.valid) {
+            console.log("failed");
+            return false;
+
+        }
+        */
+            var edu = "";
+            var isF = 1;
+            $.each($("input:checkbox[name=check]:checked"), function () {
+                if (isF) {
+                    edu = ($(this).val());
+                    isF = 0;
+                } else {
+                    edu = edu + ", " + ($(this).val());
+                }
+            });
+
+            var name = ($("#nameid").val());
+            var age = $("#ageid").val();
+            var gender = $("input[name=Gender]:checked").val();
+            var email_id = $("#emailid").val();
+            var file_name = $("#file").val();
+
+        console.log("Success...");
+
+            if (!name || !age || !gender || !email_id || !file_name || !edu) {
+                alert("Data could not be saved. One or more fields are empty!");
+            }
+            else {
+                console.log("Here");
+                $.ajax(
+                    {
+
+                        type: "POST",
+                        url: "SaveSurvey",
+                        data: {
+                            Name: $("#nameid").val(),
+                            Age: $("#ageid").val(),
+                            Gender: $("input[name=Gender]:checked").val(),
+                            EmailId: $("#emailid").val(),
+                            City: $("#city option:selected").text(),
+                            FileName: $("#file").val(),
+                            Education: edu
+                        }
+
+                    });
+                alert("Data submitted successfully!");
+               }
+        });
+    });
+</script>
+
+
+<div>
+    <form id="myform">
+        <p>
+            <label>Name : </label>
+            <input type="text" id="nameid" required/>
+           
+        </p>
+        <p>
+            <label>Age : </label>
+            <input type="number" id="ageid" min="0" max="100" />
+        </p>
+        <p>
+            <label>Gender : </label>
+            <input checked="checked" id="Gender1" name="Gender" type="radio" value="Transgender" />
+            <label for=" Gender1"> Tran </label>
+            <input id="Gender2" name="Gender" type="radio" value="Female" />
+            <label for=" Gender2"> She </label>
+            <input id="Gender3" name="Gender" type="radio" value="Male" />
+            <label for=" Gender3"> He </label>
+        </p>
+        <p>
+            <label>Email : </label>
+            <input type="email" id="emailid" required/>
+        </p>
+        <p>
+            <label>City : </label>
+            <select id="city">
+                <option value="mumbai">Mumbai</option>
+                <option value="delhi">Delhi</option>
+                <option value="bangalore">Bangalore</option>
+                <option value="pune">Pune</option>
+            </select>
+
+        </p>
+        <p>
+            <label>Upload Resume : </label>
+            <input type="file" id="file" name="file" required />
+        </p>
+        <p>
+            <label>Education : </label>
+            <input type="checkbox" id="checkedu" name="check" value="10th" class="group-required" />
+            <label for=" check1"> 10th </label>
+            <input type="checkbox" id="checkedu" name="check" value="12th" />
+            <label for=" check2"> 12th </label>
+            <input type="checkbox" id="checkedu" name="check" value="Degree" />
+            <label for=" check3"> Degree </label>
+            <input type="checkbox" id="checkedu" name="check" value="Masters" />
+            <label for=" check4"> Masters </label>
+        </p>
+        <p>
+            <input type="submit" id="btnSave" value="Submit" />
+            <input type="reset" onclick="this.form.reset();return false" value="Reset" />
+        </p>
+    </form>
+</div>
